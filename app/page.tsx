@@ -504,215 +504,225 @@ const FinalScreen = ({ accepted, quizAnswers }: { accepted: boolean; quizAnswers
               <p>✓ Conexão otimizada para sua internet</p>
             </div>
           </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.6 }}
-            className="space-y-4"
-          >
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
-              <p className="text-white text-sm mb-2">Link do seu Upsell:</p>
-              <code className="text-green-200 break-all text-xs">
-                {/* SEU_LINK_DO_UPSELL_AQUI */}
-                https://seu-link-do-upsell.com
-              </code>
-              <p className="text-white/70 text-xs mt-2">Cole este link no navegador para completar a ativação</p>
-            </div>
-
-            <p className="text-white/80 text-sm">
-              Em breve você receberá um email com todas as informações. Isso leva em média 1h, podendo durar mais em alguns casos.
-            </p>
-          </motion.div>
         </div>
       </motion.div>
     )
   }
 
+  // TELA QUANDO REJEITA O UPSELL - COM BOTÃO WHATSAPP NOVO
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="min-h-screen bg-gradient-to-br from-blue-600 via-blue-500 to-cyan-600 flex flex-col items-center justify-center px-4 py-8 relative overflow-hidden"
+      className="min-h-screen bg-gradient-to-br from-blue-600 via-cyan-500 to-blue-600 flex flex-col items-center justify-center px-4 py-8 relative overflow-hidden"
     >
-      <div className="relative z-10 text-center max-w-2xl">
+      {/* Efeito de partículas */}
+      {[...Array(20)].map((_, i) => (
+        <motion.div
+          key={i}
+          className="absolute w-1 h-1 bg-white rounded-full opacity-40"
+          animate={{
+            y: [0, -300],
+            opacity: [0.4, 0]
+          }}
+          transition={{
+            duration: 4 + i * 0.2,
+            repeat: Infinity,
+            ease: 'easeInOut'
+          }}
+          style={{
+            left: `${Math.random() * 100}%`,
+            top: `${Math.random() * 100}%`
+          }}
+        />
+      ))}
+
+      <div className="relative z-10 text-center max-w-md">
+        {/* Ícone de sucesso */}
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{ type: 'spring', stiffness: 100 }}
-          className="w-24 h-24 bg-white rounded-full flex items-center justify-center mx-auto mb-8 shadow-2xl"
+          className="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto mb-8 shadow-2xl"
         >
-          <Check className="w-12 h-12 text-blue-600" />
+          <Check className="w-10 h-10 text-blue-600" />
         </motion.div>
 
+        {/* Título */}
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="text-5xl font-bold text-white mb-4 drop-shadow-lg"
+          className="text-4xl font-bold text-white mb-6 drop-shadow-lg"
         >
           Muito Obrigado!
         </motion.h1>
 
+        {/* Subtítulo */}
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="text-2xl text-white/90 mb-8 drop-shadow-lg"
+          className="text-lg text-white/90 mb-8 drop-shadow-lg"
         >
-          Tudo Certo!
+          Sua compra foi realizada com sucesso! Clique abaixo para concluir a ativação da sua conta.
         </motion.p>
 
-        <motion.p
+        {/* Container do botão e informação */}
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-          className="text-white/80 text-lg mb-8"
-        >
-          Em breve você receberá um email com todas as informações sobre sua compra. Isso leva em média 1h, podendo durar mais em alguns casos.
-        </motion.p>
-
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.6 }}
-          className="bg-white/10 backdrop-blur-md rounded-xl p-8 border border-white/30"
+          className="w-full space-y-6"
         >
-          <p className="text-white font-semibold mb-2">Obrigado por sua confiança!</p>
-          <p className="text-white/70 text-sm">Seu acesso está sendo configurado. Verifique seu email em alguns momentos.</p>
+          {/* BOTÃO DO WHATSAPP PROFISSIONAL */}
+          <motion.a
+            href="https://wa.me/258857936697?text=Ola!%20ja%20realizei%20o%20pagamento%20e%20desejo%20ativar%20agora%20minha%20conta!"
+            target="_blank"
+            rel="noopener noreferrer"
+            whileHover={{ scale: 1.05, boxShadow: '0 25px 50px rgba(34, 197, 94, 0.5)' }}
+            whileTap={{ scale: 0.95 }}
+            className="w-full bg-gradient-to-r from-[#25D366] to-[#20BA5A] text-white font-bold py-6 px-8 rounded-2xl shadow-2xl transition-all flex items-center justify-center gap-3 relative overflow-hidden"
+          >
+            <motion.span
+              className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/30 to-white/0"
+              animate={{ x: [-400, 400] }}
+              transition={{ duration: 2.5, repeat: Infinity, ease: 'linear' }}
+            />
+            <span className="relative text-2xl">💬</span>
+            <span className="relative text-lg font-bold">Concluir Ativação no WhatsApp</span>
+          </motion.a>
+
+          {/* Caixa de informação */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.8 }}
+            className="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/30 text-center"
+          >
+            <p className="text-white/80 text-sm leading-relaxed">
+              Clique no botão acima para confirmar sua ativação via WhatsApp. Nosso suporte entrará em contato para finalizar o processo.
+            </p>
+          </motion.div>
         </motion.div>
       </div>
     </motion.div>
   )
 }
 
-// Página Principal
+// Componente Principal
 export default function Home() {
-  const [stage, setStage] = useState('initial')
-  const [loading, setLoading] = useState(true)
-  const [progress, setProgress] = useState(0)
-  const [quizAnswers, setQuizAnswers] = useState(null)
-  const [upsellAccepted, setUpsellAccepted] = useState(false)
+  const [stage, setStage] = useState<'loading' | 'success' | 'quiz' | 'upsell' | 'final'>('loading')
+  const [accepted, setAccepted] = useState(false)
+  const [quizAnswers, setQuizAnswers] = useState({})
+  const [initialLoading, setInitialLoading] = useState(true)
 
   useEffect(() => {
-    // Meta Pixel PageView
-    if (typeof window !== "undefined" && window.fbq) {
-      window.fbq("init", "829061486173119")
-      window.fbq("track", "PageView")
-    }
+    // Script Meta Pixel
+    const script = document.createElement('script')
+    script.innerHTML = `
+      !function(f,b,e,v,n,t,s)
+      {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+      if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+      n.queue=[];t=b.createElement(e);t.async=!0;
+      t.src=v;s=b.getElementsByTagName(e)[0];
+      s.parentNode.insertBefore(t,s)}(window, document,'script',
+      'https://connect.facebook.net/en_US/fbevents.js');
+      fbq('init', '829061486173119'); 
+      fbq('track', 'PageView');
+    `
+    document.head.appendChild(script)
 
     // Loading inicial
-    const randomTime = 6000 + Math.random() * 4000
-    const interval = setInterval(() => {
-      setProgress(prev => Math.min(prev + 10, 90))
-    }, 300)
-
     const timer = setTimeout(() => {
-      clearInterval(interval)
-      setProgress(100)
+      setInitialLoading(false)
       setStage('success')
-      setLoading(false)
-    }, randomTime)
+    }, 2500)
 
-    return () => {
-      clearTimeout(timer)
-      clearInterval(interval)
-    }
+    return () => clearTimeout(timer)
   }, [])
 
-  return (
-    <>
-      <script
-        dangerouslySetInnerHTML={{
-          __html: `
-            !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window, document,'script','https://connect.facebook.net/en_US/fbevents.js');
-          `
+  if (initialLoading) {
+    return <LoadingScreen stage="initial" progress={50} />
+  }
+
+  if (stage === 'success') {
+    return (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="min-h-screen bg-gradient-to-br from-emerald-600 via-teal-500 to-green-600 flex flex-col items-center justify-center px-4 py-8"
+      >
+        <div className="text-center max-w-md">
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ type: 'spring', stiffness: 100 }}
+            className="w-24 h-24 bg-white rounded-full flex items-center justify-center mx-auto mb-8 shadow-2xl"
+          >
+            <Check className="w-12 h-12 text-green-600" />
+          </motion.div>
+
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="text-4xl font-bold text-white mb-4"
+          >
+            Parabéns!
+          </motion.h1>
+
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="text-white/90 mb-8"
+          >
+            Seu pagamento foi confirmado com sucesso!
+          </motion.p>
+
+          <motion.button
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            whileHover={{ scale: 1.05 }}
+            onClick={() => setStage('quiz')}
+            className="w-full bg-white text-green-600 font-bold py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all"
+          >
+            Continuar
+          </motion.button>
+        </div>
+      </motion.div>
+    )
+  }
+
+  if (stage === 'quiz') {
+    return (
+      <QuizScreen
+        onComplete={(answers) => {
+          setQuizAnswers(answers)
+          setStage('upsell')
         }}
       />
+    )
+  }
 
-      <AnimatePresence mode="wait">
-        {loading && <LoadingScreen key="initial-loading" stage="initial" progress={progress} />}
+  if (stage === 'upsell') {
+    return (
+      <UpsellScreen
+        quizAnswers={quizAnswers}
+        onAccept={() => {
+          setAccepted(true)
+          setStage('final')
+        }}
+        onReject={() => {
+          setAccepted(false)
+          setStage('final')
+        }}
+      />
+    )
+  }
 
-        {stage === 'success' && !quizAnswers && (
-          <motion.div
-            key="success"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-100 flex flex-col items-center justify-center px-4 py-8"
-          >
-            <div className="text-center max-w-2xl">
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ type: 'spring', stiffness: 150 }}
-                className="w-32 h-32 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center mx-auto mb-8 shadow-2xl"
-              >
-                <Check className="w-16 h-16 text-white" />
-              </motion.div>
-
-              <motion.h1
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
-                className="text-5xl font-bold text-gray-800 mb-2"
-              >
-                Parabéns!
-              </motion.h1>
-
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 }}
-                className="text-2xl text-gray-600 mb-8"
-              >
-                Compra realizada com sucesso
-              </motion.p>
-
-              <motion.button
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 }}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setStage('quiz')}
-                className="bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold py-4 px-12 rounded-xl shadow-xl hover:shadow-2xl transition-all text-lg mb-4"
-              >
-                Continuar
-              </motion.button>
-            </div>
-          </motion.div>
-        )}
-
-        {stage === 'quiz' && !quizAnswers && (
-          <QuizScreen
-            key="quiz"
-            onComplete={(answers) => {
-              setQuizAnswers(answers)
-              setStage('upsell')
-            }}
-          />
-        )}
-
-        {stage === 'upsell' && quizAnswers && (
-          <UpsellScreen
-            key="upsell"
-            quizAnswers={quizAnswers}
-            onAccept={() => {
-              setUpsellAccepted(true)
-              setStage('final')
-            }}
-            onReject={() => {
-              setUpsellAccepted(false)
-              setStage('final')
-            }}
-          />
-        )}
-
-        {stage === 'final' && (
-          <FinalScreen key="final" accepted={upsellAccepted} quizAnswers={quizAnswers} />
-        )}
-      </AnimatePresence>
-    </>
-  )
+  return <FinalScreen accepted={accepted} quizAnswers={quizAnswers} />
 }
