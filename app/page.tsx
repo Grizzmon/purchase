@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Check, Smartphone, Wifi, Zap, Loader, ChevronDown } from 'lucide-react'
+import { Check, Smartphone, Wifi, Zap, AlertTriangle, X } from 'lucide-react'
 import Image from 'next/image'
 
 declare global {
@@ -10,6 +10,10 @@ declare global {
     fbq?: (action: string, event: string, data?: object) => void
   }
 }
+
+// Configurações Globais
+const WHATSAPP_LINK = "https://wa.me/5519983319474?text=Ja%20fiz%20a%20pre%20ativa%C3%A7ao%20quero%20finalizar%20a%20ativa%C3%A7o"
+const TUTORA_PAY_LINK = "https://pay.tutora.co.mz/e6cc1edc66244aa7b142f8049459b73b"
 
 // Mensagens dinâmicas para loadings
 const LOADING_MESSAGES = {
@@ -33,7 +37,6 @@ const LoadingScreen = ({ stage = 'initial', progress = 0 }: { stage?: string; pr
   }, [messages.length])
 
   useEffect(() => {
-    // Gera partículas apenas no cliente para evitar hydration mismatch
     setParticles([...Array(20)].map(() => ({
       left: Math.random() * 100,
       top: Math.random() * 100
@@ -42,7 +45,6 @@ const LoadingScreen = ({ stage = 'initial', progress = 0 }: { stage?: string; pr
 
   return (
     <div className="fixed inset-0 z-50 overflow-hidden">
-      {/* Background com imagem fullscreen */}
       <div className="absolute inset-0">
         <Image
           src="/hero-woman.png"
@@ -54,7 +56,6 @@ const LoadingScreen = ({ stage = 'initial', progress = 0 }: { stage?: string; pr
         <div className="absolute inset-0 bg-gradient-to-b from-green-900/60 via-emerald-700/50 to-green-900/70"></div>
       </div>
 
-      {/* Efeito de partículas */}
       <div className="absolute inset-0">
         {particles.map((particle, i) => (
           <motion.div
@@ -78,15 +79,12 @@ const LoadingScreen = ({ stage = 'initial', progress = 0 }: { stage?: string; pr
         ))}
       </div>
 
-      {/* Conteúdo Principal */}
       <div className="relative z-10 h-full flex flex-col items-center justify-center px-4">
-        {/* Spinner Premium */}
         <motion.div
           className="relative w-40 h-40 mb-8"
           animate={{ rotate: 360 }}
           transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
         >
-          {/* Anel externo com gradiente */}
           <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 100">
             <defs>
               <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -110,7 +108,6 @@ const LoadingScreen = ({ stage = 'initial', progress = 0 }: { stage?: string; pr
             />
           </svg>
 
-          {/* Centro pulsante */}
           <motion.div
             className="absolute inset-0 rounded-full bg-gradient-to-br from-green-400 to-emerald-600 flex items-center justify-center shadow-2xl"
             style={{
@@ -130,7 +127,6 @@ const LoadingScreen = ({ stage = 'initial', progress = 0 }: { stage?: string; pr
           </motion.div>
         </motion.div>
 
-        {/* Barra de progresso */}
         <div className="w-64 h-2 bg-white/20 rounded-full overflow-hidden mb-8 backdrop-blur-sm border border-white/30">
           <motion.div
             className="h-full bg-gradient-to-r from-green-400 via-emerald-500 to-green-600"
@@ -143,7 +139,6 @@ const LoadingScreen = ({ stage = 'initial', progress = 0 }: { stage?: string; pr
           />
         </div>
 
-        {/* Mensagem dinâmica */}
         <motion.div
           className="text-center"
           key={currentMessage}
@@ -200,7 +195,6 @@ const QuizScreen = ({ onComplete }: { onComplete: (answers: any) => void }) => {
         className="min-h-screen bg-gradient-to-br from-blue-50 via-green-50 to-emerald-100 flex flex-col items-center justify-center px-4 py-8"
       >
         <div className="w-full max-w-md">
-          {/* Progress indicator */}
           <div className="mb-8">
             <div className="flex gap-2 mb-4">
               <motion.div
@@ -216,7 +210,6 @@ const QuizScreen = ({ onComplete }: { onComplete: (answers: any) => void }) => {
           </div>
 
           {step === 0 ? (
-            // Primeira pergunta
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -255,7 +248,6 @@ const QuizScreen = ({ onComplete }: { onComplete: (answers: any) => void }) => {
               </motion.button>
             </motion.div>
           ) : (
-            // Segunda pergunta
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -315,19 +307,21 @@ const QuizScreen = ({ onComplete }: { onComplete: (answers: any) => void }) => {
   )
 }
 
-// Componente Upsell
+// Componente Upsell com Modal de Alerta
 const UpsellScreen = ({ quizAnswers, onAccept, onReject }: { quizAnswers: any; onAccept: () => void; onReject: () => void }) => {
   const [loading, setLoading] = useState(false)
+  const [showAlertModal, setShowAlertModal] = useState(false)
 
-  const handleUpsell = (accept: boolean) => {
+  const handleIgnoreClick = () => {
+    setShowAlertModal(true)
+  }
+
+  const handleForceIgnore = () => {
     setLoading(true)
-    const randomTime = 6000 + Math.random() * 4000
+    setShowAlertModal(false)
+    const randomTime = 3000 + Math.random() * 2000
     setTimeout(() => {
-      if (accept) {
-        onAccept()
-      } else {
-        onReject()
-      }
+      onReject()
     }, randomTime)
   }
 
@@ -339,7 +333,7 @@ const UpsellScreen = ({ quizAnswers, onAccept, onReject }: { quizAnswers: any; o
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-100 flex flex-col items-center justify-center px-4 py-8"
+      className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-100 flex flex-col items-center justify-center px-4 py-8 relative"
     >
       <div className="w-full max-w-2xl">
         {/* Cabeçalho */}
@@ -352,14 +346,13 @@ const UpsellScreen = ({ quizAnswers, onAccept, onReject }: { quizAnswers: any; o
           <p className="text-gray-600 text-lg">Ative o Modo App Seguro e tenha acesso a benefícios exclusivos</p>
         </motion.div>
 
-        {/* Card do Upsell */}
+        {/* Card do Upsell (399 MZN) */}
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.2 }}
           className="bg-white rounded-2xl shadow-2xl p-8 mb-8 border-2 border-green-200 relative overflow-hidden"
         >
-          {/* Badge de desconto */}
           <motion.div
             className="absolute top-4 right-4 bg-red-500 text-white px-4 py-2 rounded-full font-bold text-sm"
             animate={{ rotate: [0, 5, -5, 0] }}
@@ -368,7 +361,6 @@ const UpsellScreen = ({ quizAnswers, onAccept, onReject }: { quizAnswers: any; o
             -60% OFF
           </motion.div>
 
-          {/* Preço */}
           <div className="mb-8">
             <p className="text-gray-600 text-sm mb-2">Investimento especial:</p>
             <div className="flex items-baseline gap-3">
@@ -378,7 +370,6 @@ const UpsellScreen = ({ quizAnswers, onAccept, onReject }: { quizAnswers: any; o
             <p className="text-green-600 font-semibold mt-2">Apenas por tempo limitado!</p>
           </div>
 
-          {/* Benefícios */}
           <div className="space-y-3 mb-8">
             <h3 className="font-bold text-gray-800 mb-4">Com o Modo App Seguro você tem:</h3>
             {[
@@ -402,10 +393,9 @@ const UpsellScreen = ({ quizAnswers, onAccept, onReject }: { quizAnswers: any; o
             ))}
           </div>
 
-          {/* Botões */}
           <div className="space-y-3">
             <motion.a
-              href="https://pay.tutora.co.mz/e6cc1edc66244aa7b142f8049459b73b"
+              href={TUTORA_PAY_LINK}
               target="_blank"
               rel="noopener noreferrer"
               whileHover={{ scale: 1.02 }}
@@ -423,7 +413,7 @@ const UpsellScreen = ({ quizAnswers, onAccept, onReject }: { quizAnswers: any; o
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              onClick={() => handleUpsell(false)}
+              onClick={handleIgnoreClick}
               className="w-full bg-gray-100 text-gray-600 font-semibold py-3 px-6 rounded-xl hover:bg-gray-200 transition-all text-sm"
             >
               Continuar sem o Modo App
@@ -431,11 +421,65 @@ const UpsellScreen = ({ quizAnswers, onAccept, onReject }: { quizAnswers: any; o
           </div>
         </motion.div>
       </div>
+
+      {/* MODAL DE AVISO / ATENÇÃO SE IGNORAR */}
+      <AnimatePresence>
+        {showAlertModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border-2 border-amber-400 relative"
+            >
+              <button
+                onClick={() => setShowAlertModal(false)}
+                className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
+              >
+                <X className="w-6 h-6" />
+              </button>
+
+              <div className="flex items-center gap-3 mb-4 text-amber-600">
+                <AlertTriangle className="w-8 h-8 flex-shrink-0 animate-bounce" />
+                <h3 className="text-xl font-bold">Atenção Necessária!</h3>
+              </div>
+
+              <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6">
+                <p className="text-amber-900 font-medium text-sm leading-relaxed">
+                  Sua conta <span className="font-bold underline">pode não estar totalmente ativa</span>. É altamente recomendado finalizar a ativação agora para evitar lentidão ou instabilidade no acesso.
+                </p>
+              </div>
+
+              <div className="space-y-3">
+                {/* BOTÃO FINALIZAR ATIVAÇÃO (LEVA AO LINK TUTORA 399 MZN) */}
+                <motion.a
+                  href={TUTORA_PAY_LINK}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white font-bold py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all block text-center text-lg animate-pulse"
+                >
+                  FINALIZAR ATIVAÇÃO AGORA
+                </motion.a>
+
+                {/* CONTINUAR MESMO ASSIM (VAI PARA O WHATSAPP) */}
+                <button
+                  onClick={handleForceIgnore}
+                  className="w-full text-gray-400 hover:text-gray-600 font-medium text-xs py-2 transition-all underline"
+                >
+                  Continuar sem finalizar ativação mesmo assim
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </motion.div>
   )
 }
 
-// Tela Final
+// Tela Final (Com o Link do WhatsApp Atualizado)
 const FinalScreen = ({ accepted, quizAnswers }: { accepted: boolean; quizAnswers: any }) => {
   useEffect(() => {
     if (typeof window !== "undefined" && window.fbq) {
@@ -444,90 +488,12 @@ const FinalScreen = ({ accepted, quizAnswers }: { accepted: boolean; quizAnswers
     fetch("/api/send-email", { method: "POST" }).catch(() => {})
   }, [])
 
-  if (accepted) {
-    return (
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="min-h-screen bg-gradient-to-br from-green-600 via-emerald-500 to-teal-600 flex flex-col items-center justify-center px-4 py-8 relative overflow-hidden"
-      >
-        {/* Confetti efeito */}
-        {[...Array(30)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-2 h-2 bg-white rounded-full"
-            animate={{
-              y: [0, 500],
-              x: Math.sin(i) * 300,
-              opacity: [1, 0]
-            }}
-            transition={{
-              duration: 3,
-              delay: i * 0.05,
-              repeat: Infinity
-            }}
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `-10px`
-            }}
-          />
-        ))}
-
-        <div className="relative z-10 text-center max-w-2xl">
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ type: 'spring', stiffness: 100 }}
-            className="w-24 h-24 bg-white rounded-full flex items-center justify-center mx-auto mb-8 shadow-2xl"
-          >
-            <Check className="w-12 h-12 text-green-600" />
-          </motion.div>
-
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="text-5xl font-bold text-white mb-4 drop-shadow-lg"
-          >
-            Parabéns!
-          </motion.h1>
-
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            className="text-2xl text-white/90 mb-8 drop-shadow-lg"
-          >
-            Modo App Seguro Ativado com Sucesso!
-          </motion.p>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-            className="bg-white/20 backdrop-blur-md rounded-xl p-8 mb-8 border border-white/30"
-          >
-            <p className="text-white text-lg mb-4">Agora você tem acesso a:</p>
-            <div className="text-white/90 space-y-2 text-sm">
-              <p>✓ App instalado no seu {quizAnswers?.device || 'dispositivo'}</p>
-              <p>✓ Atendimento prioritário ativo</p>
-              <p>✓ Proteção anti-bloqueios configurada</p>
-              <p>✓ Conexão otimizada para sua internet</p>
-            </div>
-          </motion.div>
-        </div>
-      </motion.div>
-    )
-  }
-
-  // TELA QUANDO REJEITA O UPSELL - COM BOTÃO WHATSAPP
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       className="min-h-screen bg-gradient-to-br from-blue-600 via-cyan-500 to-blue-600 flex flex-col items-center justify-center px-4 py-8 relative overflow-hidden"
     >
-      {/* Efeito de partículas */}
       {[...Array(20)].map((_, i) => (
         <motion.div
           key={i}
@@ -549,7 +515,6 @@ const FinalScreen = ({ accepted, quizAnswers }: { accepted: boolean; quizAnswers
       ))}
 
       <div className="relative z-10 text-center max-w-md">
-        {/* Ícone de sucesso */}
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
@@ -559,7 +524,6 @@ const FinalScreen = ({ accepted, quizAnswers }: { accepted: boolean; quizAnswers
           <Check className="w-10 h-10 text-blue-600" />
         </motion.div>
 
-        {/* Título */}
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -569,26 +533,24 @@ const FinalScreen = ({ accepted, quizAnswers }: { accepted: boolean; quizAnswers
           Muito Obrigado!
         </motion.h1>
 
-        {/* Subtítulo */}
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
           className="text-lg text-white/90 mb-8 drop-shadow-lg"
         >
-          Sua compra foi realizada com sucesso! Clique abaixo para concluir a ativação da sua conta.
+          Sua pré-ativação foi concluída! Clique abaixo para finalizar no WhatsApp.
         </motion.p>
 
-        {/* Container do botão e informação */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
           className="w-full space-y-6"
         >
-          {/* BOTÃO DO WHATSAPP */}
+          {/* BOTÃO DO WHATSAPP ATUALIZADO */}
           <motion.a
-            href="https://wa.me/258857936697?text=Ola!%20ja%20realizei%20o%20pagamento%20e%20desejo%20ativar%20agora%20minha%20conta!"
+            href={WHATSAPP_LINK}
             target="_blank"
             rel="noopener noreferrer"
             whileHover={{ scale: 1.05, boxShadow: '0 25px 50px rgba(34, 197, 94, 0.5)' }}
@@ -604,7 +566,6 @@ const FinalScreen = ({ accepted, quizAnswers }: { accepted: boolean; quizAnswers
             <span className="relative text-lg font-bold">Concluir Ativação no WhatsApp</span>
           </motion.a>
 
-          {/* Caixa de informação */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -629,7 +590,6 @@ export default function Home() {
   const [initialLoading, setInitialLoading] = useState(true)
 
   useEffect(() => {
-    // Script Meta Pixel
     const script = document.createElement('script')
     script.innerHTML = `
       !function(f,b,e,v,n,t,s)
@@ -645,7 +605,6 @@ export default function Home() {
     `
     document.head.appendChild(script)
 
-    // Loading inicial
     const timer = setTimeout(() => {
       setInitialLoading(false)
       setStage('success')
