@@ -12,7 +12,7 @@ declare global {
 }
 
 // Configurações Globais
-const WHATSAPP_LINK = "https://wa.me/5519983319474?text=Ja%20fiz%20a%20pre%20ativa%C3%A7ao%20quero%20finalizar%20a%20ativa%C3%A7o"
+const WHATSAPP_LINK = "https://wa.me/258842118909?text=Ja%20fiz%20a%20pre%20ativa%C3%A7ao%20quero%20finalizar%20a%20ativa%C3%A7o"
 const TUTORA_PAY_LINK = "https://pay.tutora.co.mz/e6cc1edc66244aa7b142f8049459b73b"
 
 // Mensagens dinâmicas para loadings
