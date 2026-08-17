@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Check, Smartphone, Wifi, Zap, AlertTriangle, X } from 'lucide-react'
+import { Check, Smartphone, Wifi, Zap, AlertTriangle, X, ShieldCheck, ArrowRight, ExternalLink } from 'lucide-react'
 import Image from 'next/image'
 
 declare global {
@@ -14,16 +14,17 @@ declare global {
 // Configurações Globais
 const WHATSAPP_LINK = "https://wa.me/258842118909?text=Ja%20fiz%20a%20pre%20ativa%C3%A7ao%20quero%20finalizar%20a%20ativa%C3%A7o"
 const TUTORA_PAY_LINK = "https://pay.tutora.co.mz/e6cc1edc66244aa7b142f8049459b73b"
+const VIP_ACCESS_LINK = "https://seubancodigital.vercel.app/?acesso=vip"
 
-// Mensagens dinâmicas para loadings
+// Mensagens dinâmicas de carregamento
 const LOADING_MESSAGES = {
-  initial: ['Conectando servidor...', 'Validando pagamento...', 'Processando dados...', 'Sincronizando sistema...'],
-  quiz: ['Analisando respostas...', 'Processando perfil...', 'Gerando recomendações...', 'Configurando dispositivo...'],
-  upsell: ['Calculando benefícios...', 'Preparando oferta...', 'Gerando cupom...', 'Ativando recursos...'],
-  final: ['Enviando confirmação...', 'Preparando acesso...', 'Gerando credenciais...', 'Completando registro...']
+  initial: ['Conectando ao servidor seguro...', 'Validando pagamento...', 'Processando dados da transação...', 'Sincronizando conta VIP...'],
+  quiz: ['Analisando respostas...', 'Configurando perfil do dispositivo...', 'Gerando credenciais exclusivas...', 'Otimizando sistema...'],
+  upsell: ['Calculando benefícios da conta...', 'Preparando oferta de ativação...', 'Gerando chave de segurança...', 'Ativando recursos VIP...'],
+  final: ['Enviando confirmação por e-mail...', 'Liberando acesso VIP...', 'Gerando credenciais...', 'Finalizando registro...']
 }
 
-// Componente LoadingScreen Ultra Premium
+// Componente LoadingScreen Azul
 const LoadingScreen = ({ stage = 'initial', progress = 0 }: { stage?: string; progress?: number }) => {
   const [currentMessage, setCurrentMessage] = useState(0)
   const [particles, setParticles] = useState<Array<{ left: number; top: number }>>([])
@@ -32,7 +33,7 @@ const LoadingScreen = ({ stage = 'initial', progress = 0 }: { stage?: string; pr
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentMessage(prev => (prev + 1) % messages.length)
-    }, 1500)
+    }, 1400)
     return () => clearInterval(interval)
   }, [messages.length])
 
@@ -44,27 +45,28 @@ const LoadingScreen = ({ stage = 'initial', progress = 0 }: { stage?: string; pr
   }, [])
 
   return (
-    <div className="fixed inset-0 z-50 overflow-hidden">
+    <div className="fixed inset-0 z-50 overflow-hidden bg-slate-950">
       <div className="absolute inset-0">
         <Image
           src="/hero-woman.png"
-          alt="Loading"
+          alt="Loading Background"
           fill
-          className="object-cover"
+          className="object-cover opacity-20"
           priority
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-green-900/60 via-emerald-700/50 to-green-900/70"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-blue-950/80 via-indigo-950/70 to-slate-950/90 backdrop-blur-sm"></div>
       </div>
 
+      {/* Partículas flutuantes */}
       <div className="absolute inset-0">
         {particles.map((particle, i) => (
           <motion.div
             key={i}
-            className="absolute w-2 h-2 bg-green-300 rounded-full"
+            className="absolute w-2 h-2 bg-blue-400 rounded-full shadow-[0_0_8px_rgba(96,165,250,0.8)]"
             animate={{
               y: [0, -200, -400],
               opacity: [0, 1, 0],
-              x: Math.sin(i) * 100
+              x: Math.sin(i) * 80
             }}
             transition={{
               duration: 3 + i * 0.1,
@@ -80,6 +82,7 @@ const LoadingScreen = ({ stage = 'initial', progress = 0 }: { stage?: string; pr
       </div>
 
       <div className="relative z-10 h-full flex flex-col items-center justify-center px-4">
+        {/* Spinner central iluminado */}
         <motion.div
           className="relative w-40 h-40 mb-8"
           animate={{ rotate: 360 }}
@@ -87,58 +90,59 @@ const LoadingScreen = ({ stage = 'initial', progress = 0 }: { stage?: string; pr
         >
           <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 100">
             <defs>
-              <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" style={{ stopColor: '#10b981', stopOpacity: 1 }} />
-                <stop offset="100%" style={{ stopColor: '#059669', stopOpacity: 1 }} />
+              <linearGradient id="blueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style={{ stopColor: '#3b82f6', stopOpacity: 1 }} />
+                <stop offset="100%" style={{ stopColor: '#06b6d4', stopOpacity: 1 }} />
               </linearGradient>
             </defs>
-            <circle cx="50" cy="50" r="45" fill="none" stroke="url(#grad1)" strokeWidth="2" opacity="0.3" />
+            <circle cx="50" cy="50" r="45" fill="none" stroke="url(#blueGrad)" strokeWidth="2" opacity="0.2" />
             <motion.circle
               cx="50"
               cy="50"
               r="45"
               fill="none"
-              stroke="url(#grad1)"
+              stroke="url(#blueGrad)"
               strokeWidth="3"
               strokeDasharray="283"
               strokeDashoffset="283"
-              initial={{ strokeDashoffset: 283 }}
-              animate={{ strokeDashoffset: 0 }}
-              transition={{ duration: 2, repeat: Infinity }}
+              animate={{ strokeDashoffset: [283, 0] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
             />
           </svg>
 
           <motion.div
-            className="absolute inset-0 rounded-full bg-gradient-to-br from-green-400 to-emerald-600 flex items-center justify-center shadow-2xl"
+            className="absolute inset-0 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-2xl"
             style={{
-              boxShadow: '0 0 40px rgba(16, 185, 129, 0.8), inset 0 0 40px rgba(16, 185, 129, 0.3)'
+              boxShadow: '0 0 50px rgba(59, 130, 246, 0.7), inset 0 0 30px rgba(255, 255, 255, 0.2)'
             }}
             animate={{
-              scale: [0.9, 1.1, 0.9],
+              scale: [0.95, 1.05, 0.95],
               boxShadow: [
-                '0 0 20px rgba(16, 185, 129, 0.5)',
-                '0 0 60px rgba(16, 185, 129, 1)',
-                '0 0 20px rgba(16, 185, 129, 0.5)'
+                '0 0 30px rgba(59, 130, 246, 0.5)',
+                '0 0 60px rgba(6, 182, 212, 0.9)',
+                '0 0 30px rgba(59, 130, 246, 0.5)'
               ]
             }}
             transition={{ duration: 2, repeat: Infinity }}
           >
-            <Zap className="text-white w-16 h-16 drop-shadow-lg" />
+            <Zap className="text-white w-14 h-14 drop-shadow-md" />
           </motion.div>
         </motion.div>
 
-        <div className="w-64 h-2 bg-white/20 rounded-full overflow-hidden mb-8 backdrop-blur-sm border border-white/30">
+        {/* Barra de Progresso */}
+        <div className="w-64 h-2 bg-slate-800 rounded-full overflow-hidden mb-8 border border-blue-500/30">
           <motion.div
-            className="h-full bg-gradient-to-r from-green-400 via-emerald-500 to-green-600"
+            className="h-full bg-gradient-to-r from-blue-500 via-cyan-400 to-indigo-500"
             initial={{ width: '0%' }}
             animate={{ width: `${progress}%` }}
             transition={{ duration: 0.5 }}
             style={{
-              boxShadow: '0 0 20px rgba(16, 185, 129, 0.8)'
+              boxShadow: '0 0 15px rgba(6, 182, 212, 0.8)'
             }}
           />
         </div>
 
+        {/* Mensagem Dinâmica */}
         <motion.div
           className="text-center"
           key={currentMessage}
@@ -146,17 +150,17 @@ const LoadingScreen = ({ stage = 'initial', progress = 0 }: { stage?: string; pr
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
         >
-          <h2 className="text-2xl md:text-3xl font-bold text-white mb-2 drop-shadow-lg">
+          <h2 className="text-2xl md:text-3xl font-bold text-white mb-2 drop-shadow-md">
             {messages[currentMessage]}
           </h2>
-          <p className="text-white/70 text-sm">Por favor aguarde...</p>
+          <p className="text-blue-200/70 text-sm">Por favor, aguarde alguns segundos...</p>
         </motion.div>
       </div>
     </div>
   )
 }
 
-// Componente Quiz
+// Componente Quiz / Pré-cadastro do Lead
 const QuizScreen = ({ onComplete }: { onComplete: (answers: any) => void }) => {
   const [step, setStep] = useState(0)
   const [loading, setLoading] = useState(false)
@@ -164,138 +168,119 @@ const QuizScreen = ({ onComplete }: { onComplete: (answers: any) => void }) => {
 
   const handleAnswerDevice = (device: string) => {
     setLoading(true)
-    const randomTime = 6000 + Math.random() * 4000
     setTimeout(() => {
       setAnswers(prev => ({ ...prev, device }))
       setStep(1)
       setLoading(false)
-    }, randomTime)
+    }, 2500)
   }
 
   const handleAnswerInternet = (internet: string) => {
     setLoading(true)
-    const randomTime = 6000 + Math.random() * 4000
     setTimeout(() => {
-      setAnswers(prev => ({ ...prev, internet }))
-      onComplete({ ...answers, internet })
-    }, randomTime)
+      const updatedAnswers = { ...answers, internet }
+      setAnswers(updatedAnswers)
+      onComplete(updatedAnswers)
+    }, 2500)
   }
 
   if (loading) {
-    return <LoadingScreen stage="quiz" progress={step === 0 ? 30 : 60} />
+    return <LoadingScreen stage="quiz" progress={step === 0 ? 35 : 70} />
   }
 
   return (
     <AnimatePresence mode="wait">
       <motion.div
         key={step}
-        initial={{ opacity: 0, y: 50 }}
+        initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -50 }}
-        className="min-h-screen bg-gradient-to-br from-blue-50 via-green-50 to-emerald-100 flex flex-col items-center justify-center px-4 py-8"
+        exit={{ opacity: 0, y: -30 }}
+        className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-950 to-indigo-950 flex flex-col items-center justify-center px-4 py-8"
       >
         <div className="w-full max-w-md">
+          {/* Indicador de Passos */}
           <div className="mb-8">
-            <div className="flex gap-2 mb-4">
-              <motion.div
-                className={`h-2 flex-1 rounded-full ${step === 0 ? 'bg-green-500' : 'bg-green-200'}`}
-                animate={{ scaleX: step === 0 ? 1 : 0.8 }}
-              />
-              <motion.div
-                className={`h-2 flex-1 rounded-full ${step === 1 ? 'bg-green-500' : 'bg-green-200'}`}
-                animate={{ scaleX: step === 1 ? 1 : 0.8 }}
-              />
+            <div className="flex gap-2 mb-3">
+              <div className={`h-2 flex-1 rounded-full transition-all duration-300 ${step === 0 ? 'bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.8)]' : 'bg-blue-900/50'}`} />
+              <div className={`h-2 flex-1 rounded-full transition-all duration-300 ${step === 1 ? 'bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.8)]' : 'bg-blue-900/50'}`} />
             </div>
-            <p className="text-sm text-gray-600">Pergunta {step + 1} de 2</p>
+            <p className="text-xs text-blue-300 uppercase tracking-widest font-semibold">Configuração do Perfil • Etapa {step + 1} de 2</p>
           </div>
 
           {step === 0 ? (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="space-y-4"
-            >
-              <h2 className="text-3xl font-bold text-gray-800 mb-6">Em qual dispositivo você pretende usar o app?</h2>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4">
+              <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">Qual dispositivo você utilizará para acessar o aplicativo?</h2>
+              <p className="text-blue-200/70 text-sm mb-6">Sua resposta otimizará o desempenho no seu smartphone.</p>
               
               <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                whileHover={{ scale: 1.02, borderColor: '#3b82f6' }}
+                whileTap={{ scale: 0.98 }}
                 onClick={() => handleAnswerDevice('Android')}
-                className="w-full p-6 bg-white border-2 border-green-200 rounded-xl text-left hover:border-green-500 hover:bg-green-50 transition-all shadow-sm"
+                className="w-full p-5 bg-slate-900/80 border border-blue-500/30 rounded-2xl text-left hover:bg-blue-900/30 transition-all shadow-lg backdrop-blur-md"
               >
                 <div className="flex items-center gap-4">
-                  <Smartphone className="w-8 h-8 text-green-600" />
+                  <div className="p-3 bg-blue-500/20 rounded-xl text-blue-400">
+                    <Smartphone className="w-7 h-7" />
+                  </div>
                   <div>
-                    <p className="font-bold text-gray-800">Android</p>
-                    <p className="text-sm text-gray-600">Smartphone com sistema Android</p>
+                    <p className="font-bold text-white text-lg">Android</p>
+                    <p className="text-sm text-blue-200/60">Dispositivo Samsung, Xiaomi, Motorola, etc.</p>
                   </div>
                 </div>
               </motion.button>
 
               <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                whileHover={{ scale: 1.02, borderColor: '#3b82f6' }}
+                whileTap={{ scale: 0.98 }}
                 onClick={() => handleAnswerDevice('iPhone')}
-                className="w-full p-6 bg-white border-2 border-green-200 rounded-xl text-left hover:border-green-500 hover:bg-green-50 transition-all shadow-sm"
+                className="w-full p-5 bg-slate-900/80 border border-blue-500/30 rounded-2xl text-left hover:bg-blue-900/30 transition-all shadow-lg backdrop-blur-md"
               >
                 <div className="flex items-center gap-4">
-                  <Smartphone className="w-8 h-8 text-gray-800" />
+                  <div className="p-3 bg-indigo-500/20 rounded-xl text-indigo-400">
+                    <Smartphone className="w-7 h-7" />
+                  </div>
                   <div>
-                    <p className="font-bold text-gray-800">iPhone</p>
-                    <p className="text-sm text-gray-600">iPhone com sistema iOS</p>
+                    <p className="font-bold text-white text-lg">iPhone (iOS)</p>
+                    <p className="text-sm text-blue-200/60">Dispositivo Apple iPhone</p>
                   </div>
                 </div>
               </motion.button>
             </motion.div>
           ) : (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="space-y-4"
-            >
-              <h2 className="text-3xl font-bold text-gray-800 mb-6">Você tem internet com frequência?</h2>
-              
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4">
+              <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">Qual a estabilidade da sua conexão com a internet?</h2>
+              <p className="text-blue-200/70 text-sm mb-6">Ajustaremos a taxa de transmissão de dados do sistema.</p>
+
               <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                whileHover={{ scale: 1.02, borderColor: '#3b82f6' }}
+                whileTap={{ scale: 0.98 }}
                 onClick={() => handleAnswerInternet('Sim')}
-                className="w-full p-6 bg-white border-2 border-green-200 rounded-xl text-left hover:border-green-500 hover:bg-green-50 transition-all shadow-sm"
+                className="w-full p-5 bg-slate-900/80 border border-blue-500/30 rounded-2xl text-left hover:bg-blue-900/30 transition-all shadow-lg backdrop-blur-md"
               >
                 <div className="flex items-center gap-4">
-                  <Wifi className="w-8 h-8 text-green-600" />
+                  <div className="p-3 bg-cyan-500/20 rounded-xl text-cyan-400">
+                    <Wifi className="w-7 h-7" />
+                  </div>
                   <div>
-                    <p className="font-bold text-gray-800">Sim</p>
-                    <p className="text-sm text-gray-600">Tenho internet sempre disponível</p>
+                    <p className="font-bold text-white text-lg">Internet Sempre Disponível</p>
+                    <p className="text-sm text-blue-200/60">Uso Wi-Fi ou Dados Móveis frequentes</p>
                   </div>
                 </div>
               </motion.button>
 
               <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => handleAnswerInternet('Não')}
-                className="w-full p-6 bg-white border-2 border-green-200 rounded-xl text-left hover:border-green-500 hover:bg-green-50 transition-all shadow-sm"
+                whileHover={{ scale: 1.02, borderColor: '#3b82f6' }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => handleAnswerInternet('Limitada')}
+                className="w-full p-5 bg-slate-900/80 border border-blue-500/30 rounded-2xl text-left hover:bg-blue-900/30 transition-all shadow-lg backdrop-blur-md"
               >
                 <div className="flex items-center gap-4">
-                  <Wifi className="w-8 h-8 text-orange-500" />
-                  <div>
-                    <p className="font-bold text-gray-800">Não</p>
-                    <p className="text-sm text-gray-600">Minha conexão é limitada</p>
+                  <div className="p-3 bg-amber-500/20 rounded-xl text-amber-400">
+                    <Wifi className="w-7 h-7" />
                   </div>
-                </div>
-              </motion.button>
-
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => handleAnswerInternet('Às vezes')}
-                className="w-full p-6 bg-white border-2 border-green-200 rounded-xl text-left hover:border-green-500 hover:bg-green-50 transition-all shadow-sm"
-              >
-                <div className="flex items-center gap-4">
-                  <Wifi className="w-8 h-8 text-yellow-500" />
                   <div>
-                    <p className="font-bold text-gray-800">Às vezes</p>
-                    <p className="text-sm text-gray-600">Minha conexão é intermitente</p>
+                    <p className="font-bold text-white text-lg">Conexão Limitada</p>
+                    <p className="text-sm text-blue-200/60">Acesso ocasional ou instável</p>
                   </div>
                 </div>
               </motion.button>
@@ -307,8 +292,8 @@ const QuizScreen = ({ onComplete }: { onComplete: (answers: any) => void }) => {
   )
 }
 
-// Componente Upsell com Modal de Alerta
-const UpsellScreen = ({ quizAnswers, onAccept, onReject }: { quizAnswers: any; onAccept: () => void; onReject: () => void }) => {
+// Componente Upsell com Oferta VIP e Modal
+const UpsellScreen = ({ onAccept, onReject }: { quizAnswers: any; onAccept: () => void; onReject: () => void }) => {
   const [loading, setLoading] = useState(false)
   const [showAlertModal, setShowAlertModal] = useState(false)
 
@@ -319,156 +304,131 @@ const UpsellScreen = ({ quizAnswers, onAccept, onReject }: { quizAnswers: any; o
   const handleForceIgnore = () => {
     setLoading(true)
     setShowAlertModal(false)
-    const randomTime = 3000 + Math.random() * 2000
     setTimeout(() => {
       onReject()
-    }, randomTime)
+    }, 2000)
   }
 
   if (loading) {
-    return <LoadingScreen stage="upsell" progress={70} />
+    return <LoadingScreen stage="upsell" progress={85} />
   }
 
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-100 flex flex-col items-center justify-center px-4 py-8 relative"
+      className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 flex flex-col items-center justify-center px-4 py-8 relative"
     >
-      <div className="w-full max-w-2xl">
+      <div className="w-full max-w-xl">
         {/* Cabeçalho */}
         <motion.div
-          initial={{ opacity: 0, y: -30 }}
+          initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-8"
+          className="text-center mb-6"
         >
-          <h1 className="text-4xl font-bold text-gray-800 mb-2">Potencialize sua experiência!</h1>
-          <p className="text-gray-600 text-lg">Ative o Modo App Seguro e tenha acesso a benefícios exclusivos</p>
+          <span className="bg-blue-500/10 text-blue-400 border border-blue-500/30 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider inline-block mb-3">
+            Oportunidade Exclusiva
+          </span>
+          <h1 className="text-3xl md:text-4xl font-extrabold text-white mb-2">Ative o Modo App Seguro VIP!</h1>
+          <p className="text-blue-200/80 text-base">Garante ultra velocidade, estabilidade total e proteção para a sua conta.</p>
         </motion.div>
 
-        {/* Card do Upsell (399 MZN) */}
+        {/* Card do Upsell */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
+          initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.2 }}
-          className="bg-white rounded-2xl shadow-2xl p-8 mb-8 border-2 border-green-200 relative overflow-hidden"
+          transition={{ delay: 0.1 }}
+          className="bg-slate-900/90 rounded-3xl shadow-2xl p-6 md:p-8 mb-6 border border-blue-500/30 relative overflow-hidden backdrop-blur-xl"
         >
-          <motion.div
-            className="absolute top-4 right-4 bg-red-500 text-white px-4 py-2 rounded-full font-bold text-sm"
-            animate={{ rotate: [0, 5, -5, 0] }}
-            transition={{ duration: 2, repeat: Infinity }}
-          >
+          <div className="absolute top-4 right-4 bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-3 py-1 rounded-full font-bold text-xs shadow-md">
             -60% OFF
-          </motion.div>
-
-          <div className="mb-8">
-            <p className="text-gray-600 text-sm mb-2">Investimento especial:</p>
-            <div className="flex items-baseline gap-3">
-              <span className="text-5xl font-bold text-green-600">399 MZN</span>
-              <span className="text-2xl text-gray-400 line-through">999 MZN</span>
-            </div>
-            <p className="text-green-600 font-semibold mt-2">Apenas por tempo limitado!</p>
           </div>
 
+          <div className="mb-6">
+            <p className="text-blue-300 text-xs font-semibold uppercase tracking-wider mb-1">Taxa Única de Ativação VIP:</p>
+            <div className="flex items-baseline gap-3">
+              <span className="text-4xl md:text-5xl font-black text-cyan-400">399 MZN</span>
+              <span className="text-xl text-slate-500 line-through font-medium">999 MZN</span>
+            </div>
+          </div>
+
+          {/* Lista de Benefícios */}
           <div className="space-y-3 mb-8">
-            <h3 className="font-bold text-gray-800 mb-4">Com o Modo App Seguro você tem:</h3>
             {[
-              { icon: '✓', text: 'Acesso completo ao app no seu dispositivo' },
-              { icon: '✓', text: 'Atendimento prioritário 24/7' },
-              { icon: '✓', text: 'Taxas zero em todas as transações' },
-              { icon: '✓', text: 'Proteção e segurança anti-bloqueios' },
-              { icon: '✓', text: 'Garantia de satisfação' },
-              { icon: '✓', text: 'Novas atualizações automáticas' }
+              'Acesso Prioritário e sem filas no servidor',
+              'Proteção Anti-Bloqueio e Garantia Estendida',
+              'Isenção total de taxas em transações futuras',
+              'Suporte VIP via WhatsApp 24h por dia'
             ].map((benefit, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.3 + i * 0.1 }}
-                className="flex items-center gap-3 text-gray-700"
-              >
-                <span className="text-green-600 font-bold text-lg">{benefit.icon}</span>
-                <span>{benefit.text}</span>
-              </motion.div>
+              <div key={i} className="flex items-center gap-3">
+                <div className="w-5 h-5 rounded-full bg-blue-500/20 text-cyan-400 flex items-center justify-center text-xs font-bold">✓</div>
+                <span className="text-slate-200 text-sm font-medium">{benefit}</span>
+              </div>
             ))}
           </div>
 
+          {/* Botões de Ação */}
           <div className="space-y-3">
-            <motion.a
+            <a
               href={TUTORA_PAY_LINK}
               target="_blank"
               rel="noopener noreferrer"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold py-4 px-6 rounded-xl shadow-xl hover:shadow-2xl transition-all relative overflow-hidden text-lg block text-center"
+              className="w-full bg-gradient-to-r from-blue-600 via-cyan-600 to-blue-500 hover:from-blue-500 hover:to-cyan-500 text-white font-bold py-4 px-6 rounded-2xl shadow-[0_0_25px_rgba(6,182,212,0.4)] transition-all block text-center text-base uppercase tracking-wider relative overflow-hidden"
             >
-              <motion.span
-                className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/30 to-white/0"
-                animate={{ x: [-200, 200] }}
-                transition={{ duration: 2, repeat: Infinity }}
-              />
-              <span className="relative">ATIVAR MODO APP SEGURO</span>
-            </motion.a>
+              ATIVAR MODO APP SEGURO VIP
+            </a>
 
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
+            <button
               onClick={handleIgnoreClick}
-              className="w-full bg-gray-100 text-gray-600 font-semibold py-3 px-6 rounded-xl hover:bg-gray-200 transition-all text-sm"
+              className="w-full bg-slate-800/60 text-slate-400 hover:text-white font-semibold py-3 px-6 rounded-2xl hover:bg-slate-800 transition-all text-xs"
             >
-              Continuar sem o Modo App
-            </motion.button>
+              Continuar com a versão básica sem o Modo Seguro
+            </button>
           </div>
         </motion.div>
       </div>
 
-      {/* MODAL DE AVISO / ATENÇÃO SE IGNORAR */}
+      {/* Modal de Aviso */}
       <AnimatePresence>
         {showAlertModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
             <motion.div
-              initial={{ opacity: 0, scale: 0.9, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border-2 border-amber-400 relative"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              className="bg-slate-900 rounded-3xl max-w-md w-full p-6 shadow-2xl border border-amber-500/40 relative"
             >
               <button
                 onClick={() => setShowAlertModal(false)}
-                className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
+                className="absolute top-4 right-4 text-slate-400 hover:text-white"
               >
-                <X className="w-6 h-6" />
+                <X className="w-5 h-5" />
               </button>
 
-              <div className="flex items-center gap-3 mb-4 text-amber-600">
+              <div className="flex items-center gap-3 mb-4 text-amber-400">
                 <AlertTriangle className="w-8 h-8 flex-shrink-0 animate-bounce" />
-                <h3 className="text-xl font-bold">Atenção Necessária!</h3>
+                <h3 className="text-lg font-bold">Atenção Requerida</h3>
               </div>
 
-              <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6">
-                <p className="text-amber-900 font-medium text-sm leading-relaxed">
-                  Sua conta <span className="font-bold underline">pode não estar totalmente ativa</span>. É altamente recomendado finalizar a ativação agora para evitar lentidão ou instabilidade no acesso.
-                </p>
-              </div>
+              <p className="text-slate-300 text-sm leading-relaxed mb-6">
+                Sua conta pode apresentar lentidão ou instabilidade sem a chave de ativação VIP. Recomendamos concluir a ativação para evitar quedas no acesso.
+              </p>
 
               <div className="space-y-3">
-                {/* BOTÃO FINALIZAR ATIVAÇÃO (LEVA AO LINK TUTORA 399 MZN) */}
-                <motion.a
+                <a
                   href={TUTORA_PAY_LINK}
                   target="_blank"
                   rel="noopener noreferrer"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white font-bold py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all block text-center text-lg animate-pulse"
+                  className="w-full bg-gradient-to-r from-amber-500 to-orange-600 text-slate-950 font-bold py-3.5 px-6 rounded-xl shadow-lg block text-center text-sm uppercase tracking-wide"
                 >
                   FINALIZAR ATIVAÇÃO AGORA
-                </motion.a>
+                </a>
 
-                {/* CONTINUAR MESMO ASSIM (VAI PARA O WHATSAPP) */}
                 <button
                   onClick={handleForceIgnore}
-                  className="w-full text-gray-400 hover:text-gray-600 font-medium text-xs py-2 transition-all underline"
+                  className="w-full text-slate-400 hover:text-slate-200 text-xs py-2 transition-all underline"
                 >
-                  Continuar sem finalizar ativação mesmo assim
+                  Prosseguir com o acesso básico mesmo assim
                 </button>
               </div>
             </motion.div>
@@ -479,103 +439,82 @@ const UpsellScreen = ({ quizAnswers, onAccept, onReject }: { quizAnswers: any; o
   )
 }
 
-// Tela Final (Com o Link do WhatsApp Atualizado)
-const FinalScreen = ({ accepted, quizAnswers }: { accepted: boolean; quizAnswers: any }) => {
+// Tela Final (Dispara Email, Pixel e Redireciona para o Link do Banco Digital VIP)
+const FinalScreen = ({ accepted }: { accepted: boolean }) => {
   useEffect(() => {
+    // Dispara Evento de Purchase do Facebook Pixel
     if (typeof window !== "undefined" && window.fbq) {
       window.fbq("track", "Purchase", { value: 0, currency: "MZN" })
     }
-    fetch("/api/send-email", { method: "POST" }).catch(() => {})
+    // Dispara envio de e-mail de confirmação
+    fetch("/api/send-email", { method: "POST" }).catch((err) => console.error(err))
   }, [])
 
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="min-h-screen bg-gradient-to-br from-blue-600 via-cyan-500 to-blue-600 flex flex-col items-center justify-center px-4 py-8 relative overflow-hidden"
+      className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 flex flex-col items-center justify-center px-4 py-8 relative"
     >
-      {[...Array(20)].map((_, i) => (
-        <motion.div
-          key={i}
-          className="absolute w-1 h-1 bg-white rounded-full opacity-40"
-          animate={{
-            y: [0, -300],
-            opacity: [0.4, 0]
-          }}
-          transition={{
-            duration: 4 + i * 0.2,
-            repeat: Infinity,
-            ease: 'easeInOut'
-          }}
-          style={{
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`
-          }}
-        />
-      ))}
-
-      <div className="relative z-10 text-center max-w-md">
+      <div className="relative z-10 text-center max-w-md w-full">
+        {/* Ícone de Sucesso Iluminado */}
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
-          transition={{ type: 'spring', stiffness: 100 }}
-          className="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto mb-8 shadow-2xl"
+          transition={{ type: 'spring', stiffness: 120 }}
+          className="w-20 h-20 bg-gradient-to-tr from-blue-600 to-cyan-400 rounded-full flex items-center justify-center mx-auto mb-6 shadow-[0_0_40px_rgba(6,182,212,0.6)]"
         >
-          <Check className="w-10 h-10 text-blue-600" />
+          <Check className="w-10 h-10 text-slate-950 stroke-[3]" />
         </motion.div>
 
         <motion.h1
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="text-4xl font-bold text-white mb-6 drop-shadow-lg"
+          transition={{ delay: 0.2 }}
+          className="text-3xl md:text-4xl font-extrabold text-white mb-3"
         >
-          Muito Obrigado!
+          Pagamento Confirmado!
         </motion.h1>
 
         <motion.p
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className="text-lg text-white/90 mb-8 drop-shadow-lg"
+          transition={{ delay: 0.3 }}
+          className="text-blue-200/80 text-base mb-8"
         >
-          Sua pré-ativação foi concluída! Clique abaixo para finalizar no WhatsApp.
+          Sua transação foi processada com sucesso. Seu e-mail de confirmação foi enviado e o seu acesso VIP já está liberado!
         </motion.p>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6 }}
-          className="w-full space-y-6"
+          transition={{ delay: 0.4 }}
+          className="space-y-4"
         >
-          {/* BOTÃO DO WHATSAPP ATUALIZADO */}
-          <motion.a
+          {/* BOTÃO PRINCIPAL: REDIRECIONAMENTO PARA O LINK VIP */}
+          <a
+            href={VIP_ACCESS_LINK}
+            className="w-full bg-gradient-to-r from-blue-500 via-cyan-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white font-bold py-5 px-8 rounded-2xl shadow-[0_0_30px_rgba(59,130,246,0.5)] transition-all flex items-center justify-center gap-3 text-lg group"
+          >
+            <span>ACESSAR BANC ODIGITAL VIP</span>
+            <ExternalLink className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+          </a>
+
+          {/* BOTÃO SECUNDÁRIO: ATENDIMENTO WHATSAPP */}
+          <a
             href={WHATSAPP_LINK}
             target="_blank"
             rel="noopener noreferrer"
-            whileHover={{ scale: 1.05, boxShadow: '0 25px 50px rgba(34, 197, 94, 0.5)' }}
-            whileTap={{ scale: 0.95 }}
-            className="w-full bg-gradient-to-r from-[#25D366] to-[#20BA5A] text-white font-bold py-6 px-8 rounded-2xl shadow-2xl transition-all flex items-center justify-center gap-3 relative overflow-hidden"
+            className="w-full bg-slate-900/80 border border-blue-500/30 text-blue-300 hover:text-white hover:bg-blue-900/40 font-semibold py-4 px-6 rounded-2xl transition-all flex items-center justify-center gap-2 text-sm backdrop-blur-md"
           >
-            <motion.span
-              className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/30 to-white/0"
-              animate={{ x: [-400, 400] }}
-              transition={{ duration: 2.5, repeat: Infinity, ease: 'linear' }}
-            />
-            <span className="relative text-2xl">💬</span>
-            <span className="relative text-lg font-bold">Concluir Ativação no WhatsApp</span>
-          </motion.a>
+            <span>💬 Precisa de ajuda? Falar com Suporte no WhatsApp</span>
+          </a>
 
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.8 }}
-            className="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/30 text-center"
-          >
-            <p className="text-white/80 text-sm leading-relaxed">
-              Clique no botão acima para confirmar sua ativação via WhatsApp. Nosso suporte entrará em contato para finalizar o processo.
+          <div className="bg-slate-900/50 rounded-xl p-4 border border-blue-500/20 text-center mt-6">
+            <p className="text-xs text-blue-300/60 leading-relaxed">
+              Clique no botão acima para ser redirecionado imediatamente à sua conta VIP.
             </p>
-          </motion.div>
+          </div>
         </motion.div>
       </div>
     </motion.div>
@@ -590,6 +529,7 @@ export default function Home() {
   const [initialLoading, setInitialLoading] = useState(true)
 
   useEffect(() => {
+    // Script do Meta Pixel
     const script = document.createElement('script')
     script.innerHTML = `
       !function(f,b,e,v,n,t,s)
@@ -608,7 +548,7 @@ export default function Home() {
     const timer = setTimeout(() => {
       setInitialLoading(false)
       setStage('success')
-    }, 2500)
+    }, 2200)
 
     return () => clearTimeout(timer)
   }, [])
@@ -617,50 +557,53 @@ export default function Home() {
     return <LoadingScreen stage="initial" progress={50} />
   }
 
+  // Tela Inicial de Notificação de Pagamento Feito com Sucesso
   if (stage === 'success') {
     return (
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className="min-h-screen bg-gradient-to-br from-emerald-600 via-teal-500 to-green-600 flex flex-col items-center justify-center px-4 py-8"
+        className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 flex flex-col items-center justify-center px-4 py-8"
       >
-        <div className="text-center max-w-md">
+        <div className="text-center max-w-md w-full">
           <motion.div
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ type: 'spring', stiffness: 100 }}
-            className="w-24 h-24 bg-white rounded-full flex items-center justify-center mx-auto mb-8 shadow-2xl"
+            className="w-24 h-24 bg-gradient-to-tr from-blue-500 to-cyan-400 rounded-full flex items-center justify-center mx-auto mb-6 shadow-[0_0_40px_rgba(59,130,246,0.6)]"
           >
-            <Check className="w-12 h-12 text-green-600" />
+            <ShieldCheck className="w-12 h-12 text-slate-950" />
           </motion.div>
 
           <motion.h1
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-4xl font-bold text-white mb-4"
+            className="text-3xl md:text-4xl font-extrabold text-white mb-3"
           >
-            Parabéns!
+            Pagamento Feito com Sucesso!
           </motion.h1>
 
           <motion.p
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="text-white/90 mb-8"
+            className="text-blue-200/80 mb-8 text-base"
           >
-            Seu pagamento foi confirmado com sucesso!
+            Confirmamos o recebimento da sua compra. Vamos responder 2 perguntas rápidas para personalizar seu acesso antes de entrar no aplicativo.
           </motion.p>
 
           <motion.button
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            whileHover={{ scale: 1.05 }}
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
             onClick={() => setStage('quiz')}
-            className="w-full bg-white text-green-600 font-bold py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all"
+            className="w-full bg-gradient-to-r from-blue-500 via-cyan-500 to-indigo-500 text-white font-bold py-4 px-6 rounded-2xl shadow-xl hover:shadow-[0_0_25px_rgba(6,182,212,0.5)] transition-all flex items-center justify-center gap-2 text-lg"
           >
-            Continuar
+            <span>Continuar Pré-Ativação</span>
+            <ArrowRight className="w-5 h-5" />
           </motion.button>
         </div>
       </motion.div>
@@ -694,5 +637,5 @@ export default function Home() {
     )
   }
 
-  return <FinalScreen accepted={accepted} quizAnswers={quizAnswers} />
+  return <FinalScreen accepted={accepted} />
 }
