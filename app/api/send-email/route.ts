@@ -1,11 +1,16 @@
 import { Resend } from "resend"
 
-const resend = new Resend(process.env.RESEND_API_KEY)
-
 const PRODUCT_VALUE_MZN = 429
 
 export async function POST() {
+  const apiKey = process.env.RESEND_API_KEY
+  if (!apiKey) {
+    console.error("RESEND_API_KEY is not configured")
+    return Response.json({ error: "Email service not configured" }, { status: 500 })
+  }
+
   try {
+    const resend = new Resend(apiKey)
     const purchasedAt = new Date().toLocaleString("en-US", {
       timeZone: "Africa/Maputo",
       dateStyle: "medium",
