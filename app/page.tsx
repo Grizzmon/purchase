@@ -16,6 +16,7 @@ const WHATSAPP_LINK = "https://wa.me/258842118909?text=Ja%20fiz%20a%20pre%20ativ
 const TUTORA_PAY_LINK = "https://pay.tutora.co.mz/e6cc1edc66244aa7b142f8049459b73b"
 const VIP_ACCESS_LINK = "https://seubancodigital.vercel.app/vip"
 const PRODUCT_VALUE_MZN = 429
+const PURCHASE_ID_STORAGE_KEY = "vip_purchase_id"
 
 // Mensagens dinâmicas de carregamento
 const LOADING_MESSAGES = {
@@ -528,7 +529,19 @@ export default function Home() {
   const [initialLoading, setInitialLoading] = useState(true)
 
   useEffect(() => {
-    // Script do Meta Pixel
+    // Cada visitante recebe um ID de compra persistente; se já existir, é uma revisita
+    // e não disparamos Purchase nem e-mail de novo.
+    let purchaseId = localStorage.getItem(PURCHASE_ID_STORAGE_KEY)
+    const isFirstVisit = !purchaseId
+    if (!purchaseId) {
+      purchaseId = crypto.randomUUID()
+      localStorage.setItem(PURCHASE_ID_STORAGE_KEY, purchaseId)
+    }
+
+    // Script do Meta Pixel. O eventID permite ao Meta deduplicar o Purchase.
+    const purchaseTrack = isFirstVisit
+      ? `fbq('track', 'Purchase', { value: ${PRODUCT_VALUE_MZN}, currency: 'MZN', content_name: 'Conta Digital VIP', content_type: 'product', num_items: 1 }, { eventID: '${purchaseId}' });`
+      : ""
     const script = document.createElement('script')
     script.innerHTML = `
       !function(f,b,e,v,n,t,s)
@@ -541,12 +554,18 @@ export default function Home() {
       'https://connect.facebook.net/en_US/fbevents.js');
       fbq('init', '829061486173119'); 
       fbq('track', 'PageView');
-      fbq('track', 'Purchase', { value: ${PRODUCT_VALUE_MZN}, currency: 'MZN', content_name: 'Conta Digital VIP', content_type: 'product', num_items: 1 });
+      ${purchaseTrack}
     `
     document.head.appendChild(script)
 
-    // Quem chega nesta página já pagou: notifica a compra por e-mail imediatamente
-    fetch("/api/send-email", { method: "POST" }).catch((err) => console.error(err))
+    // Quem chega nesta página já pagou: notifica a compra por e-mail apenas na primeira visita
+    if (isFirstVisit) {
+      fetch("/api/send-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ purchaseId }),
+      }).catch((err) => console.error(err))
+    }
 
     const timer = setTimeout(() => {
       setInitialLoading(false)

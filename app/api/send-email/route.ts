@@ -2,11 +2,21 @@ import { Resend } from "resend"
 
 const PRODUCT_VALUE_MZN = 429
 
-export async function POST() {
+export async function POST(request: Request) {
   const apiKey = process.env.RESEND_API_KEY
   if (!apiKey) {
     console.error("RESEND_API_KEY is not configured")
     return Response.json({ error: "Email service not configured" }, { status: 500 })
+  }
+
+  let purchaseId: string | undefined
+  try {
+    const body = await request.json()
+    if (typeof body?.purchaseId === "string" && /^[a-zA-Z0-9-]{8,64}$/.test(body.purchaseId)) {
+      purchaseId = body.purchaseId
+    }
+  } catch {
+    // corpo vazio ou inválido: segue sem idempotência
   }
 
   try {
@@ -17,7 +27,10 @@ export async function POST() {
       timeStyle: "short",
     })
 
-    const { data, error } = await resend.emails.send({
+    // A idempotencyKey garante que o Resend não envie o mesmo e-mail duas vezes
+    // para a mesma compra (ex.: retries de rede ou recarregamento da página).
+    const { data, error } = await resend.emails.send(
+      {
       from: "Sales Notifications <onboarding@resend.dev>",
       to: ["gimomendes15@gmail.com"],
       subject: `New Purchase Completed - ${PRODUCT_VALUE_MZN} MZN`,
@@ -48,7 +61,9 @@ export async function POST() {
           </p>
         </div>
       `,
-    })
+      },
+      purchaseId ? { idempotencyKey: `vip-purchase/${purchaseId}` } : undefined,
+    )
 
     if (error) {
       return Response.json({ error }, { status: 500 })
