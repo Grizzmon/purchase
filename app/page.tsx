@@ -14,7 +14,8 @@ declare global {
 // Configurações Globais
 const WHATSAPP_LINK = "https://wa.me/258842118909?text=Ja%20fiz%20a%20pre%20ativa%C3%A7ao%20quero%20finalizar%20a%20ativa%C3%A7o"
 const TUTORA_PAY_LINK = "https://pay.tutora.co.mz/e6cc1edc66244aa7b142f8049459b73b"
-const VIP_ACCESS_LINK = "https://seubancodigital.vercel.app/?acesso=vip"
+const VIP_ACCESS_LINK = "https://seubancodigital.vercel.app/vip"
+const PRODUCT_VALUE_MZN = 429
 
 // Mensagens dinâmicas de carregamento
 const LOADING_MESSAGES = {
@@ -320,7 +321,7 @@ const UpsellScreen = ({ onAccept, onReject }: { quizAnswers: any; onAccept: () =
       className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 flex flex-col items-center justify-center px-4 py-8 relative"
     >
       <div className="w-full max-w-xl">
-        {/* Cabeçalho */}
+        {/* Cabe��alho */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -439,16 +440,14 @@ const UpsellScreen = ({ onAccept, onReject }: { quizAnswers: any; onAccept: () =
   )
 }
 
-// Tela Final (Dispara Email, Pixel e Redireciona para o Link do Banco Digital VIP)
+// Tela Final (Marca conclusão do fluxo e Redireciona para o Link do Banco Digital VIP)
 const FinalScreen = ({ accepted }: { accepted: boolean }) => {
   useEffect(() => {
-    // Dispara Evento de Purchase do Facebook Pixel
+    // Purchase e e-mail já foram disparados na entrada; aqui só marcamos a conclusão do fluxo
     if (typeof window !== "undefined" && window.fbq) {
-      window.fbq("track", "Purchase", { value: 0, currency: "MZN" })
+      window.fbq("trackCustom", "FlowCompleted", { upsell_accepted: accepted })
     }
-    // Dispara envio de e-mail de confirmação
-    fetch("/api/send-email", { method: "POST" }).catch((err) => console.error(err))
-  }, [])
+  }, [accepted])
 
   return (
     <motion.div
@@ -542,8 +541,12 @@ export default function Home() {
       'https://connect.facebook.net/en_US/fbevents.js');
       fbq('init', '829061486173119'); 
       fbq('track', 'PageView');
+      fbq('track', 'Purchase', { value: ${PRODUCT_VALUE_MZN}, currency: 'MZN', content_name: 'Conta Digital VIP', content_type: 'product', num_items: 1 });
     `
     document.head.appendChild(script)
+
+    // Quem chega nesta página já pagou: notifica a compra por e-mail imediatamente
+    fetch("/api/send-email", { method: "POST" }).catch((err) => console.error(err))
 
     const timer = setTimeout(() => {
       setInitialLoading(false)
